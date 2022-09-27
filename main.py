@@ -75,7 +75,7 @@ while True:
                     cv2.putText(img, button.text, (x + 25, y + 65), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, (255, 255, 255),
                                 3)
                     finalText+=button.text
-
+                    sleep(0.2)       #decreasing the touch sensitivity
 
 
     cv2.rectangle(img, (100,400), (900,500), (175,0,175), cv2.FILLED)  # drawing the rectangle for the button
