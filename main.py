@@ -60,7 +60,7 @@ while True:
 
             # print(lmList[8])
 
-            if x < lmList[8][0] < x+w:
+            if x < lmList[8][0] < x+w and y < lmList[8][1]<y+h:
                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0),cv2.FILLED)  # drawing the rectangle for the button
                 cv2.putText(img, button.text, (x + 25, y + 65), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, (255, 255, 255), 3)
 
