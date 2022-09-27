@@ -17,8 +17,6 @@ keys = [["Q","W","E","R","T","Y","U","I","O","P"],                          # Ke
 def drawALL(img,buttonList):                                                                                    #This function draws all the keys in the keyboard
     for button in buttonList:
         x,y = button.pos                                                                                        # assigning the values of x and y from the postion
-        x= math.floor(x)                                                                                        # converting the float value of x into the integer value
-        y=math.floor(y)                                                                                         # converting the float value of y into the integer value
         w,h = button.size                                                                                       # initializing the width and height of the button
         cv2.rectangle(img,(x,y), (x+w, y+h), (75, 74, 76), cv2.FILLED)                                          # drawing the rectangle for the button
         cv2.putText(img, button.text, (x+25, y+65), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, (255, 255, 255), 3)      # drawing the inner text of the button
@@ -30,6 +28,8 @@ class Button():                                                 #Class for the b
         self.pos = pos                                          # initializing x and y positions of the key
         self.size = size                                        # initializing the size of the key
         self.text = text                                        #initializing the inner text of the key
+        self.pos[0] = math.floor(self.pos[0])                   # converting the float value of pos[0] into the integer value
+        self.pos[1] = math.floor(self.pos[1])                   # converting the float value of pos[1] into the integer value
 
 
 
@@ -51,6 +51,19 @@ while True:
                                                          #lmList is landmark and bboxInfo is bounding box info
 
     img = drawALL(img,buttonList)                        #This function draws all the keys in the keyboard
+
+
+    if lmList:
+        for button in buttonList:
+            x,y = button.pos
+            w,h = button.size
+
+            # print(lmList[8])
+
+            if x < lmList[8][0] < x+w:
+                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0),cv2.FILLED)  # drawing the rectangle for the button
+                cv2.putText(img, button.text, (x + 25, y + 65), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, (255, 255, 255), 3)
+
 
     cv2.imshow("Image",img)                              # displays the image
     cv2.waitKey(1)                                       # waits for onesecond to display the image
