@@ -1,35 +1,46 @@
 import cv2
+import math
 from cvzone.HandTrackingModule import HandDetector
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)                                                   #captures video
 
-cap.set(3,1280)
-cap.set(4,720)
+cap.set(3,1280)                                                             # sets the width of the video
+cap.set(4,720)                                                              # sets the height of the video
 
-detector = HandDetector(detectionCon=0.8)                #detectionCon is detection confidence which is used for the accuracy of detection of hand                       #
+detector = HandDetector(detectionCon=0.8)                                   #detectionCon is detection confidence which is used for the accuracy of detection of hand                       #
 
-
-class Button():
-    def __init__(self,pos,text,size = [100,100]):
-        self.pos = pos
-        self.size = size
-        self.text = text
-
-    def draw(self,img):
-        x,y = self.pos
-        w,h = self.size
-
-        print("pos : ",self.pos)
-        print("size : ",self.size)
-
-        cv2.rectangle(img,(x,y), (x+w, y+h), (75, 74, 76), cv2.FILLED)
-        cv2.putText(img, self.text, (x+25, y+65), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, (255, 255, 255), 3)
-
-        return img
+keys = [["Q","W","E","R","T","Y","U","I","O","P"],                          # Keys for the keyboard to display
+        ["A","S","D","F","G","H","J","K","L",";"],
+        ["Z","X","C","V","B","N","M",",",".","/"]]
 
 
+def drawALL(img,buttonList):                                                                                    #This function draws all the keys in the keyboard
+    for button in buttonList:
+        x,y = button.pos                                                                                        # assigning the values of x and y from the postion
+        x= math.floor(x)                                                                                        # converting the float value of x into the integer value
+        y=math.floor(y)                                                                                         # converting the float value of y into the integer value
+        w,h = button.size                                                                                       # initializing the width and height of the button
+        cv2.rectangle(img,(x,y), (x+w, y+h), (75, 74, 76), cv2.FILLED)                                          # drawing the rectangle for the button
+        cv2.putText(img, button.text, (x+25, y+65), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, (255, 255, 255), 3)      # drawing the inner text of the button
+    return img                                                                                                  # returning the image after the drawing of the buttons
 
-myButton = Button([100,100],"Q")
+
+class Button():                                                 #Class for the button to store the information about button
+    def __init__(self,pos,text,size = [100,100]):               # button initialization with different parameters
+        self.pos = pos                                          # initializing x and y positions of the key
+        self.size = size                                        # initializing the size of the key
+        self.text = text                                        #initializing the inner text of the key
+
+
+
+buttonList = []
+
+x_axis_keys_distance = 1.1                                      #distance of x-axis between two adjacent horizontal keys
+y_axis_keys_distance = 1.1                                      #distance of y-axis between two adjacent vertical keys
+
+for i in range(len(keys)) :
+    for j, key in enumerate(keys[i]):
+        buttonList.append(Button([100 * j*x_axis_keys_distance + 50, 100*i*y_axis_keys_distance+50], key))
 
 
 
@@ -39,9 +50,7 @@ while True:
     lmList,bboxInfo = detector.findPosition(img)         #used to create a single bounding box in the image where the hands are visible
                                                          #lmList is landmark and bboxInfo is bounding box info
 
-    img = myButton.draw(img)
+    img = drawALL(img,buttonList)                        #This function draws all the keys in the keyboard
 
-
-
-    cv2.imshow("Image",img)
-    cv2.waitKey(1)
+    cv2.imshow("Image",img)                              # displays the image
+    cv2.waitKey(1)                                       # waits for onesecond to display the image
