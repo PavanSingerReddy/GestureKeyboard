@@ -1,6 +1,7 @@
 import cv2
 import math
 from cvzone.HandTrackingModule import HandDetector
+from time import sleep
 
 cap = cv2.VideoCapture(0)                                                   #captures video
 
@@ -13,6 +14,7 @@ keys = [["Q","W","E","R","T","Y","U","I","O","P"],                          # Ke
         ["A","S","D","F","G","H","J","K","L",";"],
         ["Z","X","C","V","B","N","M",",",".","/"]]
 
+finalText = ""
 
 def drawALL(img,buttonList):                                                                                    #This function draws all the keys in the keyboard
     for button in buttonList:
@@ -63,14 +65,21 @@ while True:
             if x < lmList[8][0] < x+w and y < lmList[8][1]<y+h:
                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0),cv2.FILLED)  # drawing the rectangle for the button
                 cv2.putText(img, button.text, (x + 25, y + 65), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, (255, 255, 255), 3)
-                distance,_,_ = detector.findDistance(8,12,img)              #refer this document for index finger and middle finger points
-                print(distance)
+                distance,_,_ = detector.findDistance(8,12,img,draw=False)              #refer this document for index finger and middle finger points
+                # print(distance)
+
+                #when index and middle finger are touched the below code runs
                 if distance < 35:
                     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255),
                                   cv2.FILLED)  # drawing the rectangle for the button
                     cv2.putText(img, button.text, (x + 25, y + 65), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, (255, 255, 255),
                                 3)
+                    finalText+=button.text
 
+
+
+    cv2.rectangle(img, (100,400), (900,500), (175,0,175), cv2.FILLED)  # drawing the rectangle for the button
+    cv2.putText(img,finalText, (110,475), cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, (255, 255, 255), 3)
 
 
     cv2.imshow("Image",img)                              # displays the image
